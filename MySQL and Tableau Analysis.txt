@@ -1,0 +1,68 @@
+1. Database Import
+To start the project, I imported the raw data into MySQL:
+
+Download the SQL database dump from the db_dump.sql file.
+Import the db_dump.sql file into your local MySQL server.
+2. Data Cleaning and Preparation in MySQL
+After importing the data, I executed the following SQL queries to clean and analyze it:
+
+Show all customer records:
+
+SELECT * FROM customers;
+Show total number of customers:
+
+
+SELECT COUNT(*) FROM customers;
+Show transactions for the Chennai market (market code 'Mark001'):
+
+
+SELECT * FROM transactions WHERE market_code='Mark001';
+Show distinct product codes sold in Chennai:
+
+SELECT DISTINCT product_code FROM transactions WHERE market_code='Mark001';
+Show transactions where currency is US dollars:
+
+SELECT * FROM transactions WHERE currency='USD';
+Show transactions for the year 2020 (joined with the date table):
+
+SELECT transactions.*, date.* FROM transactions
+INNER JOIN date ON transactions.order_date=date.date
+WHERE date.year=2020;
+Show total revenue for the year 2020:
+
+SELECT SUM(transactions.sales_amount) FROM transactions
+INNER JOIN date ON transactions.order_date=date.date
+WHERE date.year=2020 AND (transactions.currency='INR' OR transactions.currency='USD');
+Show total revenue for January 2020:
+
+SELECT SUM(transactions.sales_amount) FROM transactions
+INNER JOIN date ON transactions.order_date=date.date
+WHERE date.year=2020 AND date.month_name='January'
+AND (transactions.currency='INR' OR transactions.currency='USD');
+Show total revenue for Chennai in 2020:
+
+SELECT SUM(transactions.sales_amount) FROM transactions
+INNER JOIN date ON transactions.order_date=date.date
+WHERE date.year=2020 AND transactions.market_code='Mark001';
+
+Data Import and Preparation in Tableau:
+
+Imported the cleaned data from MySQL into Tableau.
+
+Created the following calculated fields to enhance data analysis:
+
+Normalized Amount:
+
+plaintext
+Copy code
+IF [Currency] = 'USD' THEN [Sales Amount] * 83 ELSE [Sales Amount] END
+Converts sales amounts from USD to INR using a conversion rate of 83, if the currency is USD.
+
+Profit Margin:
+
+plaintext
+Copy code
+SUM([Profit]) / SUM([Sales Amount])
+
+Calculates the profit margin by dividing the total profit by the total sales amount.
+
